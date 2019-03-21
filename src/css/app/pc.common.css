@@ -1,0 +1,217 @@
+@charset "utf-8";
+/* CSS Document */
+* {
+    padding: 0;
+    margin: 0;
+    word-break: break-all;
+    word-wrap: break-word;
+    list-style: none;
+    font-size: inherit;
+}
+html{min-width:1080px;}
+
+/*html5*/
+article, aside, dialog, footer, header, section, footer, nav, figure, menu {
+    display: block
+}
+
+body {
+    color: #5e5e5e;
+    font: 14px/1.3 "PingFangSC-Regular","Microsoft YaHei", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+}
+
+i {
+    font-style: normal;
+}
+
+fieldset, img, a, input, textarea,button {
+    border: 0;
+    outline: 0;
+}
+
+select, input, img, button {
+    vertical-align: middle;
+}
+
+input, textarea,button{
+    -webkit-appearance: none;
+    background: transparent;
+    font-family:"Microsoft YaHei", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+button{
+    border:none;
+    cursor: pointer;
+}
+textarea {
+    resize: none;
+    overflow:auto;
+}
+
+textarea[readonly] {
+    background: #eee !important;
+}
+
+textarea[readonly]:focus {
+    border-color: #ccc !important;
+}
+
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+a {
+    color: #5e5e5e;
+    text-decoration: none;
+    -webkit-transition: color .2s ease;
+    -moz-transition: color .2s ease;
+    -ms-transition: color .2s ease;
+    transition: color .2s ease;
+}
+
+a:hover {
+    color: #666;
+}
+
+a:focus, img:focus {
+    -moz-outline-style: none;
+}
+
+.clearfix:after {
+    content: "";
+    display: block;
+    clear: both;
+    height: 0;
+    font-size: 0;
+    line-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.blk {
+    display: block;
+}
+
+.inblk {
+    display: inline-block;
+}
+
+.ofh {
+    overflow: hidden;
+}
+
+.tal {
+    text-align: left;
+}
+
+.tac {
+    text-align: center;
+}
+
+.tar {
+    text-align: right;
+}
+
+.fs16 {
+    font-size: 16px !important;
+}
+
+.disabled{
+    background-color: #bbb !important;
+    color: #fff !important;
+    cursor: default !important;
+    border-color: transparent !important;
+}
+/*通用内容样式*/
+.common-box {
+    width: 1360px;
+    margin: 0 auto;
+}
+/*fix default placeholder color*/
+::-webkit-input-placeholder {
+    /* WebKit browsers */
+    color: #b7b7b7;
+    font-size: 16px;
+    font-family: "PingFangSC-Regular","Microsoft YaHei", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+
+:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    color: #b7b7b7;
+    font-size: 16px;
+    font-family: "PingFangSC-Regular","Microsoft YaHei", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+
+::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #b7b7b7;
+    font-size: 16px;
+    font-family: "PingFangSC-Regular","Microsoft YaHei", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+
+:-ms-input-placeholder {
+    /* Internet Explorer 10+ */
+    color: #b7b7b7;
+    font-size: 16px;
+    font-family: "PingFangSC-Regular","Microsoft YaHei", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+
+/*通用箭头样式*/
+.arrow,.arrow-before:before,.arrow-after:after{
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+    border-style: solid;
+}
+.arrow-before:before,.arrow-after:after{
+    content:'';
+}
+.arrow-bottom,.arrow-bottom-before:before,.arrow-bottom-after:after{
+    /*箭头朝下*/
+    border-color: #9c9c9c transparent transparent;
+}
+
+.arrow-up,.arrow-up-before:before,.arrow-up-after:after{
+    /*箭头朝上*/
+    border-color: transparent transparent #9c9c9c;
+}
+
+.arrow-right,.arrow-right-before:before,.arrow-right-after:after{
+    /*箭头朝右*/
+    border-color: transparent transparent transparent #3d3d3d;
+}
+
+.arrow-left,.arrow-left-before:before,.arrow-left-after:after{
+    /*箭头朝左*/
+    border-color: transparent #3d3d3d transparent transparent;
+}
+
+label.error {
+    color: #ff3838;
+}
+body, html {
+    height: 100%;
+}
+

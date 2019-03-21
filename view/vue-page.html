@@ -1,0 +1,10 @@
+<%= require('html-loader!./common/pc-header.html') %>
+
+	<div id="app">
+		<ul>
+			<li v-for="(item, index) in list" :key="index" v-text="item.value">
+			</li>
+		</ul>
+	</div>
+
+<%= require('html-loader!./common/pc-footer.html') %>

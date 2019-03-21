@@ -1,0 +1,15 @@
+<!-- adaptation start -->
+<script src="https://wsqncdn.miaopai.com/static2018/wap/h5_push/bobo/global/dist/js/common/adaptation.min.js"></script>
+<!-- adaptation end -->
+<script>
+    (function (window,document) {
+        var _window = window,
+            _document = document;
+        //loading remove
+        _document.onreadystatechange = function () {
+            if (_document.readyState == 'complete') {
+                _document.body.classList.remove("loading-body");
+            }
+        }
+    })(window,document);
+</script>
