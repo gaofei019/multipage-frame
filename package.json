@@ -1,7 +1,7 @@
 {
   "name": "multipage-frame",
   "version": "1.0.0",
-  "description": "",
+  "description": "在一个项目中可以同时使用`vue`、`react`、`zepto`等其他前端框架，也可以直接用`ES6`开发",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,8 +10,8 @@
     "dev": "webpack-dev-server --open --port 3000 --hot --inline"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Kevin Gao",
+  "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
@@ -45,5 +45,13 @@
     "react-dom": "^16.8.4",
     "vue": "^2.5.17",
     "zepto": "^1.2.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaofei019/multipage-frame.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gaofei019/multipage-frame/issues"
+  },
+  "homepage": "https://github.com/gaofei019/multipage-frame#readme"
 }
