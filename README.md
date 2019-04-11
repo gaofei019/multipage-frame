@@ -27,7 +27,9 @@ output:{//出口
 }
 
 ```
-在`webpack.config.js`文件中配置静态资源的引用地址
+在`webpack.config.js`文件中配置静态资源的引用地址。<br>
+
+推荐使用`nodejs`服务器`anywhere`搭建本地服务器环境。
 
 ## 发布上线
 
