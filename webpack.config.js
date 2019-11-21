@@ -6,14 +6,46 @@ var uglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var OpenBrowserPlugin = require('open-browser-webpack-plugin');
 //var ImageminPlugin = require('imagemin-webpack-plugin').default;
+let fs = require('fs')
+
+/* 获取入口文件配置 */
+function getEntryConfig(){
+	let src_files = fs.readdirSync(path.join(__dirname, 'src'))
+	let entry_files = src_files.filter(function(item){
+		return /\.js$/.test(item)
+	})
+	let entry_obj = Object.create(null)
+	entry_files.forEach((item,index)=>{
+		entry_obj[item.replace(/\.js$/,'')]=`${__dirname}/src/${item}`
+	})
+	return entry_obj
+}
+
+/* 获取模板文件配置 */
+function getTplConfig(){
+	let view_files = fs.readdirSync(path.join(__dirname, 'view'))
+	let tpl_files = view_files.filter(function(item){
+		return /\.html$/.test(item)
+	})
+	let tpl_arr = []
+	tpl_files.forEach((item,index)=>{
+		tpl_arr.push(new htmlWebpackPlugin({ //有几个生成new几个html,生成html
+			filename:item,
+			title:'模板',
+			template:`view/${item}`,
+			chunks:[item.replace(/\.html$/,'').replace(/\-page$/,'.page')],//html需要引入的js
+			cache:true,//只有在内容变化时才会生成新的html
+			minify:{
+                removeComments:true, //是否压缩时 去除注释
+                collapseWhitespace: false
+            }
+		}))
+		//tpl_arr.push(item.replace(/\.html$/,'').replace(/\-page$/,'.page'))
+	})
+	return tpl_arr
+}
 module.exports = {
-	entry:{ //入口
-		index:__dirname+'/src/index.js',
-		'vue.page':__dirname+'/src/vue.page.js',
-		'pc.page':__dirname+'/src/pc.page.js',
-		'mobile.page':__dirname+'/src/mobile.page.js',
-		'react.page':__dirname+'/src/react.page.js'
-	},
+	entry:getEntryConfig(),
 	output:{//出口
 		path:path.resolve(__dirname,'dist'),
 		//publicPath:'http://10.30.1.52:8860/bobo-h5-share/dist/',
@@ -103,7 +135,7 @@ module.exports = {
 	      }
 
 	    }),*/
-		new htmlWebpackPlugin({ //有几个生成new几个html,生成html
+		/*new htmlWebpackPlugin({ //有几个生成new几个html,生成html
 			filename:'index.html',
 			title:'首页',
 			template:'view/index.html',
@@ -157,7 +189,8 @@ module.exports = {
                 removeComments:true, //是否压缩时 去除注释
                 collapseWhitespace: false
             }
-		}),
+		}),*/
+		...getTplConfig(),
 		//new cleanWebpackPlugin(['dist']),
 		new uglifyjsWebpackPlugin(),
 		//new cleanWebpackPlugin(['dist']),

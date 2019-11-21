@@ -1,2 +1,2 @@
 require('./css/app/pc.common.css')
-require('./js/app/vue.page')
+require('./js/app/vue.index')

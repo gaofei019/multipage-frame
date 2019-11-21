@@ -1,2 +1,2 @@
 require('./css/app/pc.common.css')
-require('./js/app/pc.page')
+require('./js/app/pc.index')
