@@ -3,7 +3,7 @@ var webpack = require('webpack');
 var htmlWebpackPlugin = require('html-webpack-plugin');
 var cleanWebpackPlugin = require('clean-webpack-plugin');
 var uglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
 var OpenBrowserPlugin = require('open-browser-webpack-plugin');
 //var ImageminPlugin = require('imagemin-webpack-plugin').default;
 let fs = require('fs')
@@ -77,7 +77,7 @@ module.exports = {
 		rules:[
 			{//css loader
 				test:/\.css$/,
-				use:ExtractTextPlugin.extract({
+				/*use:ExtractTextPlugin.extract({
 					fallback:'style-loader',
 					//use:['css-loader']
 					use:[
@@ -88,7 +88,16 @@ module.exports = {
                             }
                         }
                     ]
-				})
+				})*/
+				use: [
+                    miniCssExtractPlugin.loader,
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            minimize: true //css压缩
+                        }
+                    }
+                ]
 			},
 			{//js loader
 				test:/\.js$/,
@@ -191,16 +200,14 @@ module.exports = {
             }
 		}),*/
 		...getTplConfig(),
-		//new cleanWebpackPlugin(['dist']),
 		new uglifyjsWebpackPlugin(),
 		//new cleanWebpackPlugin(['dist']),
-		new ExtractTextPlugin({ //提取css
-			filename:'css/[name].css',
+		new miniCssExtractPlugin({ //提取css
+            filename:'css/[name].css',
 			disable:false,
-
 			allChunks:true
-		}),
-		/*new webpack.optimize.CommonsChunkPlugin({ //打包公共js
+        }),
+		/*new webpack.optimize.SplitChunksPlugin({ //打包公共js
 			//name:['flexible','zepto'],
 			name:'common',
 			chunks:['./src/lib'],
