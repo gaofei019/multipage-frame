@@ -9,6 +9,12 @@
 2. `src`  入口文件和静态资源目录
 3. `view` html模板目录
 
+## 使用方法
+
+1. 在src目录下以xxx.page.js的格式新建入口文件。
+2. 在view目录下以xxx-page.html的格式新建对应的模板文件。
+3. 建完后重启webpack，就可以通过http://localhost:3000/xxx-page.html访问到新建文件。
+
 ## 运行命令
 
 1. 测试命令  `npm run dev`
