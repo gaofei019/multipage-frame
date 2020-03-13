@@ -1,1 +1,1 @@
-require('./css/app/common.css')
+import '@/css/app/common.css'

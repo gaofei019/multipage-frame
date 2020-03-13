@@ -1,2 +1,2 @@
-require('./css/app/pc.common.css')
-require('./js/app/react.index')
+import '@/css/app/pc.common.css'
+import '@/js/app/react.index'

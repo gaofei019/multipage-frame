@@ -1,11 +1,21 @@
-var path = require('path');
-var webpack = require('webpack');
-var htmlWebpackPlugin = require('html-webpack-plugin');
-var cleanWebpackPlugin = require('clean-webpack-plugin');
-var uglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const cleanWebpackPlugin = require('clean-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
-var OpenBrowserPlugin = require('open-browser-webpack-plugin');
-//var ImageminPlugin = require('imagemin-webpack-plugin').default;
+
+const isDev = process.env.NODE_ENV === 'development'
+
+const os = require('os')
+
+const HappyPack = require('happypack');
+const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+const DashboardPlugin = require('webpack-dashboard/plugin');
+
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
+
 let fs = require('fs')
 
 /* 获取入口文件配置 */
@@ -44,24 +54,23 @@ function getTplConfig(){
 	})
 	return tpl_arr
 }
+//var ImageminPlugin = require('imagemin-webpack-plugin').default;
 module.exports = {
 	entry:getEntryConfig(),
 	output:{//出口
 		path:path.resolve(__dirname,'dist'),
-		//publicPath:'http://10.30.1.52:8860/bobo-h5-share/dist/',
-		//publicPath:'https://wsqncdn.miaopai.com/static2018/wap/h5_push/bobo-h5-share/20181030/dist/',
-		//publicPath:'https://wsqncdn.miaopai.com/static2018/wap/bobo-m/20181024/dist/',
+		//publicPath:'https://yixia-static.oss-cn-beijing.aliyuncs.com/bobo/sem/202003101701/dist/',
 		publicPath:'',
 		filename:'js/[name].js'
 	},
 	devServer:{ //服务
 		contentBase:__dirname+'/dist',
 		//host:'localhost',
-		//hot: true,
+		hot: true,
 		open:true,
 		inline:true,
 		progress: true,//显示打包速度
-		port:8080/*,
+		port:3000/*,
 		proxy:{//代理
 			"/v2":{//请求v2下的接口都会被代理到 target： http://xxx.xxx.com 中
 				target:'https://api.douban.com',
@@ -72,6 +81,15 @@ module.exports = {
 
 			}
 		}*/
+	},
+	resolve: {
+	    modules: [ // 指定以下目录寻找第三方模块，避免webpack往父级目录递归搜索
+	        resolve('src'),
+	        resolve('node_modules')
+	    ],
+	    alias: {
+	        "@": resolve("src") // 缓存src目录为@符号，避免重复寻址
+	    }
 	},
 	module:{
 		rules:[
@@ -90,7 +108,8 @@ module.exports = {
                     ]
 				})*/
 				use: [
-                    miniCssExtractPlugin.loader,
+                    //miniCssExtractPlugin.loader,
+                    ...(isDev ? ["css-hot-loader", "style-loader"] : [miniCssExtractPlugin.loader]),
                     {
                         loader: 'css-loader',
                         options: {
@@ -102,16 +121,18 @@ module.exports = {
 			{//js loader
 				test:/\.js$/,
 				exclude: /(node_modules|bower_components)/,
-				use:{
+				loader: "happypack/loader?id=happyBabel"
+				/*use:{
 					loader:'babel-loader',
 					query: {
 						presets:['react','latest']
 					}
-				}
+				}*/
 			},
 			{// img 压缩，，生成hash值
 				test: /\.(png|svg|jpg|gif)$/,
-				use: ["file-loader?limit=8192&name=[name].[ext]&publicPath=../img/&outputPath=./img",'image-webpack-loader']
+				use: ["file-loader?limit=8192&name=[name].[ext]&publicPath=../img/&outputPath=./img",'image-webpack-loader'],
+				enforce: 'pre'
 				//use: ["file-loader?limit=8192&name=[name].[ext]&publicPath=../img/&outputPath=./img"]
 				/*name=[name].[ext]文件名，publicPath=../css中路径，outputPath=./img打包后的生成地址*/
 			},
@@ -123,20 +144,37 @@ module.exports = {
 				test: require.resolve('zepto'),
 		        use: ['exports-loader?window.Zepto','script-loader']
 	        },
-	        /*{ //引用zepto
-				test: require.resolve('zepto'),
-		        use: [{
-		              loader: 'exports-loader',
-		              options: 'Zepto'
-		        },{
-		              loader: 'exports-loader',
+	        /*{ //引用jquery
+				 test: require.resolve('jquery'),
+		          use: [{
+		              loader: 'expose-loader',
+		              options: 'jQuery'
+		          },{
+		              loader: 'expose-loader',
 		              options: '$'
-		        }]
+		          }]
 	        }*/
+
 		]
 	},
 	devtool:false,//'inline-source-map',
 	plugins:[
+		new HappyPack({
+	        //用id来标识 happypack处理那里类文件
+	      id: 'happyBabel',
+	      //如何处理  用法和loader 的配置一样
+	      loaders: [{
+	            path: 'babel-loader',
+	            cache: true,
+				query: {
+					presets:['react','latest']
+				}
+	      }],
+	      //共享进程池
+	      threadPool: happyThreadPool,
+	      //允许 HappyPack 输出日志
+	      verbose: true,
+	    }),
 		/*new ImageminPlugin({
 	      disable: process.env.NODE_ENV !== 'production', 
 	      pngquant: {
@@ -144,77 +182,14 @@ module.exports = {
 	      }
 
 	    }),*/
-		/*new htmlWebpackPlugin({ //有几个生成new几个html,生成html
-			filename:'index.html',
-			title:'首页',
-			template:'view/index.html',
-			chunks:['index'],//html需要引入的js
-			cache:true,//只有在内容变化时才会生成新的html
-			minify:{
-                removeComments:true, //是否压缩时 去除注释
-                collapseWhitespace: false
-            }
-		}),
-		new htmlWebpackPlugin({ //有几个生成new几个html,生成html
-			filename:'vue-page.html',
-			title:'使用vue的页面',
-			template:'view/vue-page.html',
-			chunks:['vue.page'],//html需要引入的js
-			cache:true,//只有在内容变化时才会生成新的html
-			minify:{
-                removeComments:true, //是否压缩时 去除注释
-                collapseWhitespace: false
-            }
-		}),
-		new htmlWebpackPlugin({ //有几个生成new几个html,生成html
-			filename:'pc-page.html',
-			title:'pc站页面',
-			template:'view/pc-page.html',
-			chunks:['pc.page'],//html需要引入的js
-			cache:true,//只有在内容变化时才会生成新的html
-			minify:{
-                removeComments:true, //是否压缩时 去除注释
-                collapseWhitespace: false
-            }
-		}),
-		new htmlWebpackPlugin({ //有几个生成new几个html,生成html
-			filename:'mobile-page.html',
-			title:'移动端页面',
-			template:'view/mobile-page.html',
-			chunks:['mobile.page'],//html需要引入的js
-			cache:true,//只有在内容变化时才会生成新的html
-			minify:{
-                removeComments:true, //是否压缩时 去除注释
-                collapseWhitespace: false
-            }
-		}),
-		new htmlWebpackPlugin({ //有几个生成new几个html,生成html
-			filename:'react-page.html',
-			title:'使用react的页面',
-			template:'view/react-page.html',
-			chunks:['react.page'],//html需要引入的js
-			cache:true,//只有在内容变化时才会生成新的html
-			minify:{
-                removeComments:true, //是否压缩时 去除注释
-                collapseWhitespace: false
-            }
-		}),*/
 		...getTplConfig(),
-		new uglifyjsWebpackPlugin(),
 		//new cleanWebpackPlugin(['dist']),
 		new miniCssExtractPlugin({ //提取css
             filename:'css/[name].css',
 			disable:false,
 			allChunks:true
         }),
-		/*new webpack.optimize.SplitChunksPlugin({ //打包公共js
-			//name:['flexible','zepto'],
-			name:'common',
-			chunks:['./src/lib'],
-			minChunks:2,
-			minChunks: Infinity
-		}),*/
-		new webpack.HashedModuleIdsPlugin()
-		//new OpenBrowserPlugin({ url: 'http://localhost:8080' }) //自动打开浏览器
+		new webpack.HashedModuleIdsPlugin(),
+		new DashboardPlugin(),
 	]
 };

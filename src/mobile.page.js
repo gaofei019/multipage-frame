@@ -1,2 +1,2 @@
-require('./css/app/common.css')
-require('./js/app/mobile.index')
+import '@/css/app/common.css'
+import '@/js/app/mobile.index'
