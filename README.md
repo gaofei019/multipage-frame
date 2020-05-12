@@ -23,6 +23,8 @@
 ## 备注
 开发代码中如果使用了`webpack`的代码拆分功能，静态资源打包上线之前，静态资源地址参数`publicPath`需要改成提前设置好的线上`cdn`地址或者本地测试服务的地址再打包使用。因为`webpack`自动拆分出来的文件地址是用的参数`publicPath`配置好的绝对地址。如果不提前配置好，则自动拆分出来的文件会默认相对地址，导致文件找不到而产生错误。
 
+用`npm`安装`workbox-webpack-plugin`会报错，建议所有的第三方模块用`cnpm`安装。
+
 ```
 output:{//出口
 	path:path.resolve(__dirname,'dist'),
