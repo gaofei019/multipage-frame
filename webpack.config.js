@@ -1,16 +1,17 @@
-const path = require('path');
-const webpack = require('webpack');
-const htmlWebpackPlugin = require('html-webpack-plugin');
-const cleanWebpackPlugin = require('clean-webpack-plugin');
-const miniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const htmlWebpackPlugin = require('html-webpack-plugin')
+const cleanWebpackPlugin = require('clean-webpack-plugin')
+const miniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 
 const os = require('os')
 
-const HappyPack = require('happypack');
-const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
-const DashboardPlugin = require('webpack-dashboard/plugin');
+const HappyPack = require('happypack')
+const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
+
+const WorkboxPlugin = require('workbox-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -157,7 +158,7 @@ module.exports = {
 
 		]
 	},
-	devtool:false,//'inline-source-map',
+	devtool:isDev?'cheap-module-eval-source-map':'cheap-module-source-map',//'inline-source-map',
 	plugins:[
 		new HappyPack({
 	        //用id来标识 happypack处理那里类文件
@@ -190,6 +191,26 @@ module.exports = {
 			allChunks:true
         }),
 		new webpack.HashedModuleIdsPlugin(),
-		new DashboardPlugin(),
+		new WorkboxPlugin.GenerateSW({
+            cacheId: 'webpack-pwa', // 设置前缀
+            skipWaiting: true, // 强制等待中的 Service Worker 被激活
+            clientsClaim: true, // Service Worker 被激活后使其立即获得页面控制权
+            swDest: 'service-worker.js', // 输出 Service worker 文件
+            /*runtimeCaching: [
+                // 配置路由请求缓存
+                {
+                    urlPattern: /.*\.js/, // 匹配文件
+                    handler: 'NetworkFirst', // 网络优先
+                    options: {
+                    	// Fall back to the cache after 2 seconds.
+                    	networkTimeoutSeconds: 2,
+				        // Configure which responses are considered cacheable.
+				        cacheableResponse: {
+				          statuses: [200]
+				        }
+				    }
+                }
+            ]*/
+        }),
 	]
 };

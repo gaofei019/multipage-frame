@@ -11,5 +11,18 @@
                 _document.body.classList.remove("loading-body");
             }
         }
+        if ('serviceWorker' in navigator) {
+            _window.addEventListener('load', () => {
+                navigator.serviceWorker
+                  .register('/service-worker.js')
+                  .then(registration => {
+                    console.log('service-worker registed')
+                  })
+                  .catch(error => {
+                    console.log(error)
+                    console.log('service-worker registed error')
+                  })
+            })
+        }
     })(window,document);
 </script>
